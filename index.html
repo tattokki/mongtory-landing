@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONGTORY 몽토리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFDF7; --sage:#BEF0A6; --yellow:#FFD84D; --pale-yellow:#FFF3C2;
+    --green:#4FC24A; --green-deep:#3AAE4A; --collab-bg:#CFF2B8;
+    --stone:#B3AA96; --ink:#3E4A37;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Gowun Dodum', sans-serif; color:var(--ink); background:var(--cream); overflow-x:hidden;}
+  h1,h2,.logotype{font-family:'Do Hyeon', sans-serif; font-weight:400;}
+  a{color:inherit; text-decoration:none;}
+  svg{display:block;}
+  .screen{min-height:100vh; width:100%; position:relative; display:flex; align-items:center; padding:0 8vw;}
+  .topnav{position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:30px 8vw;}
+  .logotype{font-size:1.4rem; color:var(--green-deep); letter-spacing:0.03em;}
+  .topnav .menu{display:flex; gap:34px; font-size:0.92rem;}
+  .topnav .menu a{opacity:0.75; transition:opacity .2s;}
+  .topnav .menu a:hover{opacity:1;}
+  .navburger{display:none; background:none; border:none; font-family:'Gowun Dodum'; font-size:0.9rem; color:var(--green-deep);}
+  .sidenav{position:fixed; right:5vw; top:50%; transform:translateY(-50%); z-index:200; display:flex; flex-direction:column; gap:22px; align-items:flex-end;}
+  .sidenav a{font-family:'Do Hyeon'; font-size:0.82rem; color:var(--stone); display:flex; align-items:center; gap:6px; letter-spacing:0.04em; transition:color .25s;}
+  .sidenav a .label{max-width:0; overflow:hidden; white-space:nowrap; transition:max-width .3s ease;}
+  .sidenav a.active{color:var(--green-deep);}
+  .sidenav a.active .label{max-width:120px; margin-left:2px;}
+  .sidenav a::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--stone); flex-shrink:0;}
+  .sidenav a.active::before{background:var(--green);}
+  .circle-deco{position:absolute; border-radius:50%; z-index:0; opacity:0.9;}
+  #hello{background:linear-gradient(180deg,#F3FBEC 0%, var(--cream) 100%); flex-direction:column; align-items:flex-start; justify-content:center; overflow:hidden;}
+  #hello .hero-copy{position:relative; z-index:2; max-width:640px;}
+  #hello .hero-copy p.tag{font-size:1rem; color:var(--green); margin-bottom:18px;}
+  #hello h1{font-size:clamp(2.6rem,7vw,5.4rem); line-height:1.15; color:var(--green-deep);}
+  #hello .hero-copy p.sub{margin-top:22px; font-size:1.08rem; color:#40513A; max-width:46ch;}
+  .scroll-cue{position:absolute; bottom:40px; left:8vw; font-size:0.82rem; color:var(--stone); display:flex; align-items:center; gap:8px;}
+  .scroll-cue span{display:inline-block; width:1px; height:34px; background:var(--stone); animation:cue 1.8s infinite;}
+  @keyframes cue{0%{transform:scaleY(0); transform-origin:top;} 50%{transform:scaleY(1); transform-origin:top;} 51%{transform-origin:bottom;} 100%{transform:scaleY(0); transform-origin:bottom;}}
+  #about{background:var(--cream); flex-direction:column; align-items:center; text-align:center; justify-content:center;}
+  .about-inner{position:relative; max-width:720px; z-index:2;}
+  #about .circle-deco{width:420px; height:420px; background:radial-gradient(circle at 35% 30%, var(--sage), transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%);}
+  #about h2{font-size:clamp(1.8rem,3.4vw,2.6rem); color:var(--green-deep); margin-bottom:26px;}
+  #about p{font-size:1.05rem; color:#40513A; line-height:1.9;}
+  #about p + p{margin-top:16px;}
+  #friends-intro{background:var(--pale-yellow); flex-direction:column; justify-content:center; align-items:flex-start;}
+  #friends-intro .circle-deco{width:360px; height:360px; background:radial-gradient(circle at 60% 40%, var(--yellow), transparent 72%); right:6vw; top:12%;}
+  #friends-intro h2{position:relative; z-index:2; font-size:clamp(2rem,5vw,3.4rem); color:var(--green-deep);}
+  #friends-intro p{position:relative; z-index:2; margin-top:18px; max-width:48ch; color:#5b4a19; font-size:1rem;}
+  .directory{position:relative; z-index:2; margin-top:40px; display:flex; flex-wrap:wrap; gap:14px;}
+  .directory a{font-size:0.92rem; padding:10px 20px; border:1px solid var(--green-deep); border-radius:999px; color:var(--green-deep); transition:all .2s;}
+  .directory a:hover{background:var(--green-deep); color:var(--cream);}
+  .char-screen{flex-direction:row; gap:6vw;}
+  .char-screen .char-illust{flex:1; display:flex; align-items:center; justify-content:center; position:relative;}
+  .img-placeholder{width:min(70%,320px); aspect-ratio:1/1; border-radius:24px; border:2px dashed rgba(62,74,55,0.28); display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:var(--stone); text-align:center; padding:20px; background:rgba(255,255,255,0.35);}
+  .char-screen .char-copy{flex:1; position:relative; z-index:2;}
+  .char-copy .tag{font-size:0.9rem; opacity:0.7; margin-bottom:10px;}
+  .char-copy h2{font-size:clamp(2rem,4.4vw,3.2rem); margin-bottom:6px;}
+  .char-copy .roster{font-size:1rem; opacity:0.75; margin-bottom:28px;}
+  .char-copy .line{margin-bottom:18px; max-width:44ch;}
+  .char-copy .line b{display:block; font-size:0.86rem; opacity:0.6; margin-bottom:3px; font-weight:normal;}
+  .char-copy .line p{font-size:0.98rem; line-height:1.85;}
+  .char-screen:nth-of-type(even){flex-direction:row-reverse;}
+  #collab{background:var(--collab-bg); color:var(--ink); flex-direction:column; align-items:center; text-align:center; justify-content:center;}
+  #collab .circle-deco{width:460px; height:460px; background:radial-gradient(circle at 40% 40%, rgba(255,216,77,0.45), transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%);}
+  #collab h2{position:relative; z-index:2; font-size:clamp(1.9rem,4vw,3rem); margin-bottom:22px; color:var(--ink);}
+  #collab p{position:relative; z-index:2; max-width:56ch; margin:0 auto 30px; color:#4B5A43; font-size:1.02rem;}
+  .collab-slots{position:relative; z-index:2; display:flex; gap:16px; flex-wrap:wrap; justify-content:center;}
+  .collab-slot{border:1px dashed rgba(62,74,55,0.35); border-radius:16px; padding:26px 24px; width:200px; font-size:0.88rem; color:#4B5A43;}
+  .collab-contact{position:relative; z-index:2; margin-top:34px; font-size:0.94rem; color:#4B5A43;}
+  .collab-contact a{border-bottom:1px solid var(--ink); color:var(--ink);}
+  footer{padding:26px 8vw; font-size:0.8rem; color:var(--stone); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; background:var(--cream);}
+  @media (max-width:820px){
+    .topnav .menu{display:none;} .navburger{display:block;}
+    .sidenav{right:4vw; gap:14px;} .sidenav a .label{display:none;}
+    .char-screen, .char-screen:nth-of-type(even){flex-direction:column; text-align:left; padding-top:100px;}
+    .img-placeholder{width:70%;} .screen{padding:0 6vw;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="#hello" class="logotype">몽토리</a>
+  <nav class="menu">
+    <a href="#about">브랜드</a>
+    <a href="#friends-intro">캐릭터</a>
+    <a href="#collab">협업</a>
+  </nav>
+</div>
+
+<nav class="sidenav" id="sidenav">
+  <a href="#hello" class="active">01<span class="label">HELLO</span></a>
+  <a href="#about">02<span class="label">ABOUT</span></a>
+  <a href="#friends-intro">03<span class="label">FRIENDS</span></a>
+  <a href="#collab">04<span class="label">COLLAB</span></a>
+</nav>
+
+<section class="screen" id="hello">
+  <div class="hero-copy">
+    <p class="tag">제주의 작은 존재들이 들려주는 이야기</p>
+    <h1>안녕,<br>몽토리예요.</h1>
+    <p class="sub">돌 속에 잠든 빛, 바람이 따르는 친구, 아직 뿌리내릴 곳을 찾지 못한 씨앗들. 제주의 자연과 이야기를 품은 열두 친구를 만나보세요.</p>
+  </div>
+  <div class="scroll-cue"><span></span>SCROLL</div>
+</section>
+
+<section class="screen" id="about">
+  <div class="circle-deco"></div>
+  <div class="about-inner">
+    <h2>ABOUT</h2>
+    <p>몽토리(MONGTORY)는 제주의 자연과 신화, 오래된 생활문화에서 이야기를 발견하는 캐릭터 브랜드 입니다.
+현무암과 바람, 꽃씨와 고사리, 집 앞에 정주석까지. 익숙해서 지나치기 쉬운 존재들에게 이름과 마음을 건넵니다.</p>
+    <p>몽토리의 친구들은 저마다 바라는 것이 있습니다. 자기 안의 빛을 기다리고, 함께 나아갈 친구를 고르고, 뿌리내릴 자리를 찾아 여행합니다. 그 작은 여정들을 따라가다 보면, 우리가 알던 제주도 조금 다르게 보일 거예요.</p>
+  </div>
+</section>
+
+<section class="screen" id="friends-intro">
+  <div class="circle-deco"></div>
+  <div>
+    <h2>제주에서 만난<br>열두 친구</h2>
+    <p>같은 섬에서 태어났지만, 모두 다른 이야기를 품고 있어요.
+마음이 가는 친구부터 만나보세요.</p>
+    <div class="directory"><a href="#char-seolmundae">설문대</a>
+<a href="#char-stonewind">덜멩이</a>
+<a href="#char-seeds">모멀</a>
+<a href="#char-twins">녹두</a>
+<a href="#char-rabbits">다루</a>
+<a href="#char-snail">고능이</a></div>
+  </div>
+</section>
+
+
+<section class="screen char-screen" id="char-seolmundae" style="background:#FFFDF7;">
+  <div class="char-illust"><div class="img-placeholder">이미지 자리<br>설문대 할망</div></div>
+  <div class="char-copy">
+    <p class="tag" style="color:#3AAE4A">제주를 품은 할망</p>
+    <h2 style="color:#3AAE4A">설문대 할망</h2>
+    <p class="roster">제주와 몽토리 친구들의 이야기를 지켜보는 존재</p>
+    <div class="line"><b>외형</b><p>제주와 한라산의 모습을 한 치마에 검은 저고리를 입고 있습니다. 현무암으로 이루어진 머리 위로 바람 같은 천의가 흐릅니다.</p></div>
+    <div class="line"><b>서사</b><p>제주를 만들었다고 전해지는 설문대할망. 몽토리 세계의 돌과 바람, 작은 씨앗들까지 오래도록 지켜본 존재입니다. 친구들이 저마다의 길을 떠나는 동안, 할망은 제주를 두르고 그 이야기들을 품습니다.</p></div>
+    <div class="line"><b>모티프</b><p>제주 창조신화의 설문대할망 · 삼다도</p></div>
+  </div>
+</section>
+
+<section class="screen char-screen" id="char-stonewind" style="background:#FBF6E8;">
+  <div class="char-illust"><div class="img-placeholder">이미지 자리<br>덜멩이 &amp; 보람이</div></div>
+  <div class="char-copy">
+    <p class="tag" style="color:#E0A200">돌과 바람의 친구</p>
+    <h2 style="color:#E0A200">덜멩이 &amp; 보람이</h2>
+    <p class="roster">자기 안의 빛을 기다리는 돌과, 처음으로 길을 고른 바람</p>
+    <div class="line"><b>외형</b><p>덜멩이는 감람석을 품은 현무암으로, 머리에는 계절마다 다른 꽃이 자랍니다. 보람은 제주의 바람 속에서 태어난 직박구리 친구입니다.</p></div>
+    <div class="line"><b>서사</b><p>덜멩이는 몸속에 반짝이는 감람석을 품고 있습니다. 하지만 그 빛이 언젠가 밖으로 드러날 수 있을지 아직은 자신이 없어요. 그때까지 그저 흐르는 대로 하늘을 떠다니던 보람이 덜멩이를 발견합니다. 보람은 처음으로 스스로 함께할 친구를 고르고, 둘은 어디로 갈지 몰라도 나란히 나아가 보기로 합니다.</p></div>
+    <div class="line"><b>모티프</b><p>제주 현무암과 감람석 · 곶자왈의 식물 · 바람과 제주 직박구리</p></div>
+  </div>
+</section>
+
+<section class="screen char-screen" id="char-seeds" style="background:#FFFDF7;">
+  <div class="char-illust"><div class="img-placeholder">이미지 자리<br>모멀 · 지름고장 · 동이와 박이</div></div>
+  <div class="char-copy">
+    <p class="tag" style="color:#3AAE4A">여행하는 씨앗 친구들</p>
+    <h2 style="color:#3AAE4A">모멀 · 지름고장 · 동이와 박이</h2>
+    <p class="roster">뿌리내릴 자리를 찾아 제주를 여행하는 네 씨앗</p>
+    <div class="line"><b>외형</b><p>모멀은 메밀꽃과 메밀씨앗, 지름고장은 유채꽃과 유채씨앗에서 태어났습니다. 쌍둥이 동이와 박이는 각각 붉은 동백과 흰 동백의 씨앗입니다.</p></div>
+    <div class="line"><b>서사</b><p>네 친구는 자신이 어디에 뿌리를 내리고 싶은지 알아보기 위해 제주 곳곳을 여행합니다. 바람을 맞고, 낯선 풍경을 만나고, 마음에 오래 남는 장소를 하나씩 발견하지요. 정해진 날이면 다시 모여 각자가 보고 들은 제주의 이야기를 나눕니다. 아직 어느 곳에 자리 잡을지는 몰라도, 돌아와 이야기를 들려줄 친구들이 있다는 건 알고 있어요.</p></div>
+    <div class="line"><b>모티프</b><p>제주 메밀과 유채 · 붉은 동백과 흰 동백의 꽃과 씨앗</p></div>
+  </div>
+</section>
+
+<section class="screen char-screen" id="char-twins" style="background:#FBF6E8;">
+  <div class="char-illust"><div class="img-placeholder">이미지 자리<br>녹두 &amp; 생이</div></div>
+  <div class="char-copy">
+    <p class="tag" style="color:#E0A200">제주의 문 앞에서</p>
+    <h2 style="color:#E0A200">녹두 &amp; 생이</h2>
+    <p class="roster">제주를 찾아온 이들에게 이야기를 건네는 정주석 쌍둥이</p>
+    <div class="line"><b>외형</b><p>제주 집 앞의 정주석과 정낭에서 태어난 쌍둥이입니다.</p></div>
+    <div class="line"><b>서사</b><p>녹두와 생이는 제주를 찾는 사람들을 반기는 걸 좋아합니다. 섬 곳곳의 정주석과 정낭을 만나러 다니며, 그 앞을 지나간 사람들과 집마다 다른 풍경을 기억해 두지요. 새로운 방문객이 오면 쌍둥이는 기다렸다는 듯 말합니다. “우리가 오늘은 어떤 제주 이야기를 들려줄까?”</p></div>
+    <div class="line"><b>모티프</b><p>정주석과 정낭 · 집과 문을 지키는 이야기</p></div>
+  </div>
+</section>
+
+<section class="screen char-screen" id="char-rabbits" style="background:#FFFDF7;">
+  <div class="char-illust"><div class="img-placeholder">이미지 자리<br>다루 &amp; 바루</div></div>
+  <div class="char-copy">
+    <p class="tag" style="color:#3AAE4A">달과 바다가 만난 밤</p>
+    <h2 style="color:#3AAE4A">다루 &amp; 바루</h2>
+    <p class="roster">달의 반쪽을 찾으러 온 토끼와 바다에서 태어난 토끼</p>
+    <div class="line"><b>외형</b><p>다루는 달에서 내려온 토끼, 바루는 애월의 바다에서 태어난 토끼입니다. 서로 다른 곳에서 왔지만 어딘가 닮아 있습니다.</p></div>
+    <div class="line"><b>서사</b><p>달이 반쪽만 남은 밤, 다루는 사라진 나머지 반쪽을 찾아 애월 해안으로 내려옵니다. 달에 이끌린 바다는 밀려왔다 물러나기를 반복하고, 그 물결 속에서 다루를 닮은 바다토끼 바루가 태어나지요. 잃어버린 반쪽을 찾던 다루 앞에 나타난 건 달 조각이 아니라 새로운 친구였습니다.</p></div>
+    <div class="line"><b>모티프</b><p>애월 해안 · 달과 바다 · 토끼 · 달에 따른 바닷물의 움직임</p></div>
+  </div>
+</section>
+
+<section class="screen char-screen" id="char-snail" style="background:#FBF6E8;">
+  <div class="char-illust"><div class="img-placeholder">이미지 자리<br>고능이</div></div>
+  <div class="char-copy">
+    <p class="tag" style="color:#3AAE4A">고사리를 지켜라!</p>
+    <h2 style="color:#3AAE4A">고능이</h2>
+    <p class="roster">등에 돋아난 어린 고사리를 키우는 민달팽이</p>
+    <div class="line"><b>외형</b><p>등에 작은 고사리 잎을 이고 다니는 고사리 달팽이. 느릿한 걸음과 달리 눈빛만은 늘 또렷합니다.</p></div>
+    <div class="line"><b>서사</b><p>고사리를 너무 좋아한 나머지 포자를 잔뜩 들이마셔서일까요? 어느 날 고능이의 몸에서 작은 고사리가 자라기 시작했습니다. 고능이는 기쁜 마음으로 돌보기 시작하지만, 여린 고사리를 발견한 사람들이 자꾸 꺾어 가려고 해요. 고능이는 자기 고사리를 무사히 어른 고사리로 키울 수 있을까요?</p></div>
+    <div class="line"><b>모티프</b><p>제주의 고사리 · 민달팽이</p></div>
+  </div>
+</section>
+
+<section class="screen" id="collab">
+  <div class="circle-deco"></div>
+  <div>
+    <h2>COLLAB</h2>
+    <p>몽토리는 브랜드가 품은 개성을 캐릭터로 풀어내는 협업을 꿈꿉니다. 함께 만들어 갈 새로운 친구의 자리는 열어두었습니다.</p>
+    <div class="collab-slots">
+      <div class="collab-slot">협업 캐릭터<br>자리 1</div>
+      <div class="collab-slot">협업 캐릭터<br>자리 2</div>
+      <div class="collab-slot">협업 캐릭터<br>자리 3</div>
+    </div>
+    <p class="collab-contact">협업 문의 <a href="mailto:tattokki@gmail.com">tattokki@gmail.com</a></p>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 MONGTORY. All Rights Reserved.</span>
+  <span>Jeju-si, Jeju-do, Republic of Korea</span>
+</footer>
+
+<script>
+const mainSections = ['hello','about','friends-intro','collab'];
+const navLinks = document.querySelectorAll('#sidenav a');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const match = document.querySelector('#sidenav a[href="#'+entry.target.id+'"]');
+      if(match) match.classList.add('active');
+    }
+  });
+},{threshold:0.5});
+mainSections.forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) observer.observe(el);
+});
+</script>
+</body>
+</html>
